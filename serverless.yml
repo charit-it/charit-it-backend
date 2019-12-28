@@ -6,6 +6,10 @@ provider:
 functions:
   item:
     handler: item.handler
+    environment:
+      DB_HOST: ${opt:DB_HOST}
+      DB_USER: ${opt:DB_USER}
+      DB_PASSWORD: ${opt:DB_PASSWORD}
     events:
       - http:
           path: item
@@ -18,4 +22,8 @@ functions:
       - http:
           path: item/{itemId}
           method: delete
+          cors: true
+      - http:
+          path: item/{itemId}
+          method: put
           cors: true
