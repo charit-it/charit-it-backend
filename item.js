@@ -45,12 +45,13 @@ app.post("/item", function(req, res) {
   const itemId = req.body.itemId;
   const userId = req.body.userId;
   const itemUrl = req.body.image_URL;
+  const itemType = req.body.itemType;
   const itemName = req.body.item_name;
   const itemDes = req.body.item_description;
   const itemPri = req.body.item_price;
 
-  const q = "INSERT INTO item (itemId, userId, image_URL, item_name, item_description, item_price) VALUES (?, ?, ?, ?, ?, ?)";
-  connection.query(q, [itemId, userId, itemUrl, itemName, itemDes, itemPri], function(err, results) {
+  const q = "INSERT INTO item (itemId, userId, image_URL, itemType, item_name, item_description, item_price) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  connection.query(q, [itemId, userId, itemUrl, itemType, itemName, itemDes, itemPri], function(err, results) {
     if(err){
       res.status(500).json({error: err});
     }else{
@@ -58,6 +59,7 @@ app.post("/item", function(req, res) {
         itemId: itemId,
         userId: userId,
         image_URL: itemUrl,
+        itemType: itemType,
         item_name: itemName,
         item_description: itemDes,
         item_price: itemPri
