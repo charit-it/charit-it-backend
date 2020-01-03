@@ -16,16 +16,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get("/item", function(req, res) {
-  connection.query("SELECT * FROM item", function(err, data) {
+  connection.query("SELECT * FROM item INNER JOIN shop_owner ON item.userId = shop_owner.userId", function(err, data) {
     if(err){
-      console.log("Error fetching items", err);
-      res.status(500).json({
-        error: err
-      });
+      res.status(500).json({error: err});
     }else{
-      res.json({
-        item: data
-      });
+      res.json(data);
     }
   });
 });
@@ -42,7 +37,6 @@ app.delete("/item/:itemId", function(req, res) {
 });
 
 app.post("/item", function(req, res) {
-  const itemId = req.body.itemId;
   const userId = req.body.userId;
   const itemUrl = req.body.image_URL;
   const itemType = req.body.itemType;
@@ -50,13 +44,12 @@ app.post("/item", function(req, res) {
   const itemDes = req.body.item_description;
   const itemPri = req.body.item_price;
 
-  const q = "INSERT INTO item (itemId, userId, image_URL, itemType, item_name, item_description, item_price) VALUES (?, ?, ?, ?, ?, ?, ?)";
-  connection.query(q, [itemId, userId, itemUrl, itemType, itemName, itemDes, itemPri], function(err, results) {
+  const q = "INSERT INTO item (userId, image_URL, itemType, item_name, item_description, item_price) VALUES (?, ?, ?, ?, ?, ?)";
+  connection.query(q, [userId, itemUrl, itemType, itemName, itemDes, itemPri], function(err, results) {
     if(err){
       res.status(500).json({error: err});
     }else{
       res.status(201).json({
-        itemId: itemId,
         userId: userId,
         image_URL: itemUrl,
         itemType: itemType,
